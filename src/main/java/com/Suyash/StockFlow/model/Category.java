@@ -20,10 +20,14 @@ public class Category {
     private Long categoryId;
 
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String categoryName;
 
-    private String Description;
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_category_id")
+    private Category parentCategory;
 
     private LocalDateTime createdAt;
 

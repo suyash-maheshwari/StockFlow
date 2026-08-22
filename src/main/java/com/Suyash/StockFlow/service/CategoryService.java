@@ -1,19 +1,24 @@
 package com.Suyash.StockFlow.service;
 
-import com.Suyash.StockFlow.model.Category;
+import com.Suyash.StockFlow.payload.request.CategoryDto;
+import com.Suyash.StockFlow.payload.response.BulkCategoryResult;
+import com.Suyash.StockFlow.payload.response.CategoryPageResponse;
+import com.Suyash.StockFlow.payload.response.CategoryResponse;
 
 import java.util.List;
 
 
 public interface CategoryService {
 
-    List<Category> getAllCategories();
+    CategoryPageResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
-    String createCategory(Category category);
+    CategoryResponse createCategory(CategoryDto categoryResponseDto);
 
     String deleteCategory(Long categoryId);
 
-    Category updateCategory(Category category, Long categoryId);
+    CategoryResponse updateCategory(CategoryDto categoryDto, Long categoryId);
 
-    Category getCategoryById(Long categoryId);
+    CategoryResponse getCategoryById(Long categoryId);
+
+    BulkCategoryResult createCategories(List<CategoryDto> categoryDtos);
 }

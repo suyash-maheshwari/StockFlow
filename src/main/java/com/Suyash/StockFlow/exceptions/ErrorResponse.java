@@ -1,7 +1,13 @@
 package com.Suyash.StockFlow.exceptions;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.Map;
+
+@Getter
+@Setter
 
 public class ErrorResponse {
     private int status;
