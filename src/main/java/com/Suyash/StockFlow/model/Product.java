@@ -5,49 +5,50 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class Category {
-
+public class Product {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long productId;
 
+    @Column(nullable = false)
+    private String productName;
 
     @Column(nullable = false, unique = true)
-    private String categoryName;
+    private String slug;
 
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_category_id")
-    private Category parentCategory;
+    private String brand;
 
-    @OneToMany(mappedBy = "category")
-    private List<Product> products;
+    private String imageUrl;
+
+    private boolean active = true;
+
+    @ManyToOne
+    @JoinColumn(name = "categoryId", nullable = false)
+    private Category category;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
     @PrePersist
-    private void onCreate(){
+    public void onCreate(){
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    private void onUpdate(){
+    public void onUpdate(){
         updatedAt = LocalDateTime.now();
     }
-
-
 
 }
