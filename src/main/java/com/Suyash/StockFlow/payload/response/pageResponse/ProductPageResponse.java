@@ -1,18 +1,18 @@
-package com.Suyash.StockFlow.payload.response;
+package com.Suyash.StockFlow.payload.response.pageResponse;
 
+import com.Suyash.StockFlow.payload.response.ProductResponse;
 import lombok.*;
 
 import java.util.List;
 
-@Builder
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class CategoryPageResponse {
+@NoArgsConstructor
+@Builder
+public class ProductPageResponse {
 
-    private List<CategoryResponse> content;
-
+    private List<ProductResponse> content;
     private Integer pageNumber;
     private Integer pageSize;
     private Long totalElements;

@@ -1,4 +1,4 @@
-package com.Suyash.StockFlow.payload;
+package com.Suyash.StockFlow.payload.mapper;
 
 import com.Suyash.StockFlow.model.Category;
 import com.Suyash.StockFlow.payload.request.CategoryDto;

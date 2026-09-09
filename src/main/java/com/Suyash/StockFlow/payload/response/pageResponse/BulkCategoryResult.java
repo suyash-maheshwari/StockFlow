@@ -1,5 +1,6 @@
-package com.Suyash.StockFlow.payload.response;
+package com.Suyash.StockFlow.payload.response.pageResponse;
 
+import com.Suyash.StockFlow.payload.response.CategoryResponse;
 import lombok.*;
 
 import java.util.List;

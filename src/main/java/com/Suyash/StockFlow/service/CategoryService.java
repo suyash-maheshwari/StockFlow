@@ -1,8 +1,8 @@
 package com.Suyash.StockFlow.service;
 
 import com.Suyash.StockFlow.payload.request.CategoryDto;
-import com.Suyash.StockFlow.payload.response.BulkCategoryResult;
-import com.Suyash.StockFlow.payload.response.CategoryPageResponse;
+import com.Suyash.StockFlow.payload.response.pageResponse.BulkCategoryResult;
+import com.Suyash.StockFlow.payload.response.pageResponse.CategoryPageResponse;
 import com.Suyash.StockFlow.payload.response.CategoryResponse;
 
 import java.util.List;
