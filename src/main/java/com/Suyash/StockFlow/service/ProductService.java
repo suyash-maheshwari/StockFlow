@@ -1,8 +1,7 @@
 package com.Suyash.StockFlow.service;
 
-import com.Suyash.StockFlow.model.Product;
 import com.Suyash.StockFlow.payload.request.ProductDto;
-import com.Suyash.StockFlow.payload.response.ProductPageResponse;
+import com.Suyash.StockFlow.payload.response.pageResponse.ProductPageResponse;
 import com.Suyash.StockFlow.payload.response.ProductResponse;
 
 public interface ProductService {

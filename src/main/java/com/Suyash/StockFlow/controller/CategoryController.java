@@ -2,14 +2,13 @@ package com.Suyash.StockFlow.controller;
 
 import com.Suyash.StockFlow.config.AppConstants;
 import com.Suyash.StockFlow.payload.request.CategoryDto;
-import com.Suyash.StockFlow.payload.response.BulkCategoryResult;
-import com.Suyash.StockFlow.payload.response.CategoryPageResponse;
+import com.Suyash.StockFlow.payload.response.pageResponse.BulkCategoryResult;
+import com.Suyash.StockFlow.payload.response.pageResponse.CategoryPageResponse;
 import com.Suyash.StockFlow.payload.response.CategoryResponse;
 import com.Suyash.StockFlow.service.CategoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
