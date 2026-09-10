@@ -1,11 +1,14 @@
 package com.Suyash.StockFlow.controller;
 
 import com.Suyash.StockFlow.config.AppConstants;
+import com.Suyash.StockFlow.payload.request.BulkProductVariantRequest;
 import com.Suyash.StockFlow.payload.request.ProductVariantDto;
 import com.Suyash.StockFlow.payload.response.ProductVariantResponse;
+import com.Suyash.StockFlow.payload.response.pageResponse.BulkProductVariantResult;
 import com.Suyash.StockFlow.payload.response.pageResponse.ProductVariantPageResponse;
 import com.Suyash.StockFlow.service.ProductVariantService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +37,7 @@ public class ProductVariantController {
     @GetMapping
     public ResponseEntity<ProductVariantPageResponse> getAllProductVariants(
             @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER) @Min(0) Integer pageNumber,
-            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE)@Min(1) Integer pageSize,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE)@Min(1) @Max(100) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_PRODUCT_VARIANTS_BY) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR) String sortOrder
     ){
@@ -42,9 +45,10 @@ public class ProductVariantController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/product/{productId}")
-    public ResponseEntity<ProductVariantPageResponse> getAllVariantsByProduct(@PathVariable @Min(1) Long productId,
+    public ResponseEntity<ProductVariantPageResponse> getAllVariantsByProduct(
+            @PathVariable @Min(1) Long productId,
             @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER)@Min(0) Integer pageNumber,
-            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE)@Min(1) Integer pageSize,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE)@Min(1) @Max(100) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_PRODUCT_VARIANTS_BY) String sortBy,
             @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR) String sortOrder
     ){
@@ -53,15 +57,21 @@ public class ProductVariantController {
     }
 
     @PutMapping("/{variantId}")
-    public ResponseEntity<ProductVariantResponse> updateProductVariant(@RequestBody ProductVariantDto dto, @PathVariable Long variantId){
+    public ResponseEntity<ProductVariantResponse> updateProductVariant(@Valid @RequestBody ProductVariantDto dto, @PathVariable @Min(1) Long variantId){
         ProductVariantResponse response = variantService.updateProductVariant(dto, variantId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{variantId}")
-    public ResponseEntity<String> deactivateProductVariant(@PathVariable Long variantId){
+    public ResponseEntity<String> deactivateProductVariant(@PathVariable @Min(1) Long variantId){
         String response = variantService.deactivateProductVariant(variantId);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<BulkProductVariantResult> createProductVariantsBulk(@RequestBody BulkProductVariantRequest request){
+        BulkProductVariantResult result = variantService.createProductVariantsBulk(request);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 }
 
