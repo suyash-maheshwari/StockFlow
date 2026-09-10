@@ -6,8 +6,11 @@ import com.Suyash.StockFlow.exceptions.ResourceNotFoundException;
 import com.Suyash.StockFlow.model.Product;
 import com.Suyash.StockFlow.model.ProductVariant;
 import com.Suyash.StockFlow.payload.mapper.ProductVariantMapper;
+import com.Suyash.StockFlow.payload.request.BulkProductVariantRequest;
 import com.Suyash.StockFlow.payload.request.ProductVariantDto;
+import com.Suyash.StockFlow.payload.request.ProductVariantItemDto;
 import com.Suyash.StockFlow.payload.response.ProductVariantResponse;
+import com.Suyash.StockFlow.payload.response.pageResponse.BulkProductVariantResult;
 import com.Suyash.StockFlow.payload.response.pageResponse.ProductVariantPageResponse;
 import com.Suyash.StockFlow.repository.ProductRepository;
 import com.Suyash.StockFlow.repository.ProductVariantRepository;
@@ -19,9 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ProductVariantServiceImpl implements ProductVariantService {
@@ -173,6 +177,62 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         variant.setActive(false);
         variantRepository.save(variant);
         return "Product Variant with variantId: " + variantId + " deactivated successfully";
+    }
+
+    @Override
+    public BulkProductVariantResult createProductVariantsBulk(BulkProductVariantRequest request) {
+        Product product = productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Product with productId: " + request.getProductId() + " not found"
+                ));
+
+        if(!product.isActive()){
+            throw new ResourceNotFoundException(
+                    "Product with productId: " + request.getProductId() + " is not active"
+            );
+        }
+
+        List<ProductVariantResponse> created = new ArrayList<>();
+        List<String> skipped = new ArrayList<>();
+
+        Set<String> seenSkuInThisBatch = new HashSet<>();
+
+        for(ProductVariantItemDto item: request.getVariants()){
+            if(!seenSkuInThisBatch.add(item.getSku().toLowerCase())){
+                skipped.add(item.getSku() + " — duplicate SKU within this request, skipped");
+                continue;
+            }
+
+            boolean existsInDb = variantRepository.findBySkuIgnoreCase(item.getSku()).isPresent();
+            if(existsInDb){
+                    skipped.add(item.getSku() + " — already exists in database, skipped");
+                    continue;
+            }
+
+            try{
+                validatePricing(item.getPrice(), item.getDiscountPrice());
+            } catch (InvalidPriceException ex){
+                skipped.add(item.getSku() + " - " + ex.getMessage());
+                continue;
+            }
+
+            ProductVariant variant = new ProductVariant();
+            variant.setVariantName(item.getVariantName());
+            variant.setSku(item.getSku());
+            variant.setPrice(item.getPrice());
+            variant.setDiscountPrice(item.getDiscountPrice());
+            variant.setQuantityAvailable(item.getQuantityAvailable());
+            variant.setProduct(product);
+            variant.setActive(true);
+
+            ProductVariant savedVariant = variantRepository.save(variant);
+            created.add(mapper.toResponse(savedVariant));
+        }
+
+        return BulkProductVariantResult.builder()
+                .created(created)
+                .skipped(skipped)
+                .build();
     }
 
     private void validatePricing(BigDecimal price, BigDecimal discountPrice){

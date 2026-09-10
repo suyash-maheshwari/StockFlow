@@ -1,8 +1,10 @@
 package com.Suyash.StockFlow.controller;
 
 import com.Suyash.StockFlow.config.AppConstants;
+import com.Suyash.StockFlow.payload.request.BulkProductVariantRequest;
 import com.Suyash.StockFlow.payload.request.ProductVariantDto;
 import com.Suyash.StockFlow.payload.response.ProductVariantResponse;
+import com.Suyash.StockFlow.payload.response.pageResponse.BulkProductVariantResult;
 import com.Suyash.StockFlow.payload.response.pageResponse.ProductVariantPageResponse;
 import com.Suyash.StockFlow.service.ProductVariantService;
 import jakarta.validation.Valid;
@@ -62,6 +64,12 @@ public class ProductVariantController {
     public ResponseEntity<String> deactivateProductVariant(@PathVariable Long variantId){
         String response = variantService.deactivateProductVariant(variantId);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<BulkProductVariantResult> createProductVariantsBulk(@RequestBody BulkProductVariantRequest request){
+        BulkProductVariantResult result = variantService.createProductVariantsBulk(request);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 }
 

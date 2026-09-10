@@ -1,7 +1,9 @@
 package com.Suyash.StockFlow.service;
 
+import com.Suyash.StockFlow.payload.request.BulkProductVariantRequest;
 import com.Suyash.StockFlow.payload.request.ProductVariantDto;
 import com.Suyash.StockFlow.payload.response.ProductVariantResponse;
+import com.Suyash.StockFlow.payload.response.pageResponse.BulkProductVariantResult;
 import com.Suyash.StockFlow.payload.response.pageResponse.ProductVariantPageResponse;
 
 public interface ProductVariantService {
@@ -16,4 +18,6 @@ public interface ProductVariantService {
     ProductVariantResponse updateProductVariant(ProductVariantDto dto, Long variantId);
 
     String deactivateProductVariant(Long variantId);
+
+    BulkProductVariantResult createProductVariantsBulk(BulkProductVariantRequest request);
 }
