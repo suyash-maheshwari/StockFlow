@@ -10,4 +10,5 @@ public class AppConstants {
     public static final String SORT_WAREHOUSE_BY = "warehouseName";
     public static final String SORT_STOCK_BY = "stockId";
     public static final String SORT_TRANSACTION_BY = "transactionId";
+    public static final String SORT_TRANSFER_BY = "transferId";
 }
