@@ -13,4 +13,5 @@ public class AppConstants {
     public static final String SORT_TRANSFER_BY = "transferId";
     public static final String SORT_SUPPLIER_BY = "supplierName";
     public static final String SORT_PURCHASE_ORDER_BY = "purchaseOrderId";
+    public static final String SORT_USERS_BY = "name";
 }
