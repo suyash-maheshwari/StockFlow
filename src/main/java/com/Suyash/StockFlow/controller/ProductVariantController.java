@@ -1,12 +1,15 @@
 package com.Suyash.StockFlow.controller;
 
 import com.Suyash.StockFlow.config.AppConstants;
+import com.Suyash.StockFlow.payload.request.AssignAttributeValueDto;
 import com.Suyash.StockFlow.payload.request.BulkProductVariantRequest;
 import com.Suyash.StockFlow.payload.request.ProductVariantDto;
 import com.Suyash.StockFlow.payload.response.ProductVariantResponse;
+import com.Suyash.StockFlow.payload.response.VariantAttributeSummary;
 import com.Suyash.StockFlow.payload.response.pageResponse.BulkProductVariantResult;
 import com.Suyash.StockFlow.payload.response.pageResponse.ProductVariantPageResponse;
 import com.Suyash.StockFlow.service.ProductVariantService;
+import com.Suyash.StockFlow.service.VariantAttributeService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -21,6 +24,9 @@ public class ProductVariantController {
 
     @Autowired
     private ProductVariantService variantService;
+
+    @Autowired
+    private VariantAttributeService attributeService;
 
     @PostMapping
     public ResponseEntity<ProductVariantResponse> createProductVariant(@Valid @RequestBody ProductVariantDto variantDto){
@@ -72,6 +78,25 @@ public class ProductVariantController {
     public ResponseEntity<BulkProductVariantResult> createProductVariantsBulk(@RequestBody BulkProductVariantRequest request){
         BulkProductVariantResult result = variantService.createProductVariantsBulk(request);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{variantId}/attributes")
+    public ResponseEntity<VariantAttributeSummary> assignAttribute(@PathVariable @Min(1) Long variantId,
+                                                                   @Valid @RequestBody AssignAttributeValueDto dto){
+        VariantAttributeSummary summary = attributeService.assignAttribute(variantId, dto);
+        return new ResponseEntity<>(summary, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{variantId}/attributes")
+    public ResponseEntity<VariantAttributeSummary> getAttributesForVariant(@PathVariable @Min(1) Long variantId){
+        VariantAttributeSummary summary = attributeService.getAttributesForVariant(variantId);
+        return new ResponseEntity<>(summary, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{variantId}/attributes/{attributeId}")
+    public ResponseEntity<String> removeAttribute(@PathVariable @Min(1) Long variantId, @PathVariable @Min(1) Long attributeId){
+        String message = attributeService.removeAttribute(variantId, attributeId);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }
 
